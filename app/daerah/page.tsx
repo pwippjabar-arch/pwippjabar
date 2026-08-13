@@ -28,8 +28,7 @@ export default async function DaerahPage() {
     console.error('Gagal memuat data daerah:', err);
   }
 
-  const pdList = allList.filter((d) => d.tipe?.toUpperCase() === 'PD');
-  const bkcList = allList.filter((d) => d.tipe?.toUpperCase() === 'BKC');
+  const pdList = allList;
 
-  return <DaerahClient pdList={pdList} bkcList={bkcList} />;
+  return <DaerahClient pdList={pdList} />;
 }
