@@ -33,7 +33,7 @@ export default function KontakClient() {
   const handleWhatsApp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.nama.trim() || !form.pesan.trim()) return;
-    const msg = `Assalamualaikum PW IPP Jawa Barat,\n\nPerkenalkan, nama saya *${form.nama.trim()}*${form.asal.trim() ? ` dari *${form.asal.trim()}*` : ''}.\n\n${form.pesan.trim()}\n\nTerima kasih.`;
+    const msg = `Bismillah,\n\nPerkenalkan, nama saya *${form.nama.trim()}*${form.asal.trim() ? ` dari *${form.asal.trim()}*` : ''}.\n\n${form.pesan.trim()}\n\nTerima kasih.`;
     const encoded = encodeURIComponent(msg);
     window.open(`https://wa.me/6285923248689?text=${encoded}`, '_blank');
   };
