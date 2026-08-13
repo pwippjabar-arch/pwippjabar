@@ -39,55 +39,44 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-brand-red/10 blur-3xl" />
         <div className="pointer-events-none absolute top-1/2 -right-40 w-[380px] h-[380px] rounded-full bg-brand-darkred/10 blur-3xl" />
 
-        {/* Motif Batik Sunda SVG — sudut kiri bawah */}
+        {/* Motif Mega Mendung — batik khas Sunda/Cirebon, sudut kiri bawah */}
         <svg
-          className="pointer-events-none absolute bottom-0 left-0 w-48 sm:w-72 opacity-[0.07] text-brand-red"
-          viewBox="0 0 200 200"
+          className="pointer-events-none absolute bottom-0 left-0 w-48 sm:w-72 opacity-[0.08] text-brand-red"
+          viewBox="0 0 220 180"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
-          {/* Motif Kawung — batik Sunda paling khas */}
-          {[0,1,2,3].map((row) =>
-            [0,1,2,3].map((col) => {
-              const cx = 25 + col * 50;
-              const cy = 25 + row * 50;
-              return (
-                <g key={`${row}-${col}`}>
-                  <ellipse cx={cx} cy={cy - 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
-                  <ellipse cx={cx} cy={cy + 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
-                  <ellipse cx={cx - 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
-                  <ellipse cx={cx + 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
-                  <circle cx={cx} cy={cy} r="4" stroke="#D90429" strokeWidth="1" />
-                </g>
-              );
-            })
-          )}
+          {/* Awan 1 — berlapis dari luar ke dalam */}
+          <path d="M-5,70 C15,38 35,52 55,42 C68,18 88,30 108,22 C120,4 138,16 155,22 C175,30 195,18 215,42 C225,52 225,62 225,70" stroke="#D90429" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M-5,78 C15,48 35,61 55,51 C68,28 88,39 108,31 C120,14 138,25 155,31 C175,39 195,28 215,51 C225,61 225,70 225,78" stroke="#D90429" strokeWidth="2" strokeLinecap="round" />
+          <path d="M-5,86 C15,58 35,70 55,60 C68,38 88,48 108,40 C120,24 138,34 155,40 C175,48 195,38 215,60 C225,70 225,79 225,86" stroke="#D90429" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M-5,94 C15,68 35,79 55,69 C68,48 88,57 108,49 C120,34 138,43 155,49 C175,57 195,48 215,69 C225,79 225,88 225,94" stroke="#D90429" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M-5,102 C15,78 35,88 55,78 C68,58 88,66 108,58 C120,44 138,52 155,58 C175,66 195,58 215,78 C225,88 225,97 225,102" stroke="#D90429" strokeWidth="1" strokeLinecap="round" />
+          {/* Awan 2 — di bawah, sedikit bergeser */}
+          <path d="M-5,148 C20,118 42,130 62,120 C75,98 95,110 115,102 C128,86 146,96 163,102 C183,110 203,98 220,120 C225,128 225,138 225,148" stroke="#D90429" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M-5,156 C20,128 42,139 62,129 C75,108 95,118 115,110 C128,95 146,104 163,110 C183,118 203,108 220,129 C225,137 225,147 225,156" stroke="#D90429" strokeWidth="2" strokeLinecap="round" />
+          <path d="M-5,164 C20,138 42,148 62,138 C75,118 95,127 115,119 C128,105 146,113 163,119 C183,127 203,118 220,138 C225,146 225,156 225,164" stroke="#D90429" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M-5,172 C20,148 42,157 62,147 C75,128 95,136 115,128 C128,115 146,122 163,128 C183,136 203,128 220,147 C225,155 225,165 225,172" stroke="#D90429" strokeWidth="1.3" strokeLinecap="round" />
         </svg>
 
-        {/* Motif Batik Sunda SVG — sudut kanan atas */}
+        {/* Motif Mega Mendung — sudut kanan atas (dibalik) */}
         <svg
-          className="pointer-events-none absolute top-0 right-0 w-48 sm:w-72 opacity-[0.07] text-brand-red rotate-180"
-          viewBox="0 0 200 200"
+          className="pointer-events-none absolute top-0 right-0 w-48 sm:w-72 opacity-[0.08] text-brand-red rotate-180"
+          viewBox="0 0 220 180"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
-          {[0,1,2,3].map((row) =>
-            [0,1,2,3].map((col) => {
-              const cx = 25 + col * 50;
-              const cy = 25 + row * 50;
-              return (
-                <g key={`${row}-${col}`}>
-                  <ellipse cx={cx} cy={cy - 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
-                  <ellipse cx={cx} cy={cy + 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
-                  <ellipse cx={cx - 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
-                  <ellipse cx={cx + 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
-                  <circle cx={cx} cy={cy} r="4" stroke="#D90429" strokeWidth="1" />
-                </g>
-              );
-            })
-          )}
+          <path d="M-5,70 C15,38 35,52 55,42 C68,18 88,30 108,22 C120,4 138,16 155,22 C175,30 195,18 215,42 C225,52 225,62 225,70" stroke="#D90429" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M-5,78 C15,48 35,61 55,51 C68,28 88,39 108,31 C120,14 138,25 155,31 C175,39 195,28 215,51 C225,61 225,70 225,78" stroke="#D90429" strokeWidth="2" strokeLinecap="round" />
+          <path d="M-5,86 C15,58 35,70 55,60 C68,38 88,48 108,40 C120,24 138,34 155,40 C175,48 195,38 215,60 C225,70 225,79 225,86" stroke="#D90429" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M-5,94 C15,68 35,79 55,69 C68,48 88,57 108,49 C120,34 138,43 155,49 C175,57 195,48 215,69 C225,79 225,88 225,94" stroke="#D90429" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M-5,102 C15,78 35,88 55,78 C68,58 88,66 108,58 C120,44 138,52 155,58 C175,66 195,58 215,78 C225,88 225,97 225,102" stroke="#D90429" strokeWidth="1" strokeLinecap="round" />
+          <path d="M-5,148 C20,118 42,130 62,120 C75,98 95,110 115,102 C128,86 146,96 163,102 C183,110 203,98 220,120 C225,128 225,138 225,148" stroke="#D90429" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M-5,156 C20,128 42,139 62,129 C75,108 95,118 115,110 C128,95 146,104 163,110 C183,118 203,108 220,129 C225,137 225,147 225,156" stroke="#D90429" strokeWidth="2" strokeLinecap="round" />
+          <path d="M-5,164 C20,138 42,148 62,138 C75,118 95,127 115,119 C128,105 146,113 163,119 C183,127 203,118 220,138 C225,146 225,156 225,164" stroke="#D90429" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M-5,172 C20,148 42,157 62,147 C75,128 95,136 115,128 C128,115 146,122 163,128 C183,136 203,128 220,147 C225,155 225,165 225,172" stroke="#D90429" strokeWidth="1.3" strokeLinecap="round" />
         </svg>
 
         {/* Konten Hero */}
