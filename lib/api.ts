@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbyZEvaP9ugDhxOsXd1Sj7L3ouZiB4h5LD_zO9X1ZTZpuCgtosgN3_CWlZncm6tHBC6Q/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzXanTeVFeJwaI62D2YyJPidwvuBI888UkrSR189Hnd9d8gMyOOJtCYkGXM-yPaH3o_/exec";
 
 export interface BeritaItem {
   id: number | string;
