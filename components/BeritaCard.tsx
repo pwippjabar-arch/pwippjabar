@@ -7,7 +7,7 @@ interface BeritaCardProps {
 
 export default function BeritaCard({ item }: BeritaCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition flex flex-col justify-between h-full">
       <div>
         <div className="relative w-full h-48 bg-gray-100 dark:bg-gray-700">
           <img
