@@ -43,8 +43,8 @@ export const pageSeoMap: Record<string, { title: string; desc: string; image: st
     image: DEFAULT_IMAGE,
   },
   daerah: {
-    title: "Pimpinan Daerah & Cabang | PW IPP Jawa Barat",
-    desc: "Direktori lengkap Pimpinan Daerah (PD) dan Badan Koordinasi Cabang (BKC) Ikatan Pelajar Persis se-Jawa Barat.",
+    title: "Pimpinan Daerah | PW IPP Jawa Barat",
+    desc: "Direktori lengkap Pimpinan Daerah (PD) Ikatan Pelajar Persis se-Jawa Barat.",
     image: DEFAULT_IMAGE,
   },
 };
