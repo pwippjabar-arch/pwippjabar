@@ -110,7 +110,30 @@ function getBeritaData() {
       if (docId) {
         try {
           var doc = DocumentApp.openById(docId);
-          fullContent = doc.getBody().getText();
+          var body = doc.getBody();
+          var numChildren = body.getNumChildren();
+          var paragraphs = [];
+          
+          for (var j = 0; j < numChildren; j++) {
+            var child = body.getChild(j);
+            var type = child.getType();
+            
+            if (type === DocumentApp.ElementType.PARAGRAPH) {
+              paragraphs.push(child.asParagraph().getText());
+            } else if (type === DocumentApp.ElementType.LIST_ITEM) {
+              paragraphs.push(child.asListItem().getText());
+            } else if (type === DocumentApp.ElementType.TABLE) {
+              var table = child.asTable();
+              for (var r = 0; r < table.getNumRows(); r++) {
+                var row = table.getRow(r);
+                for (var c = 0; c < row.getNumCells(); c++) {
+                  paragraphs.push(row.getCell(c).getText());
+                }
+              }
+            }
+          }
+          
+          fullContent = paragraphs.join("\n");
           snippet = fullContent.length > 150 ? fullContent.substring(0, 150) + "..." : fullContent;
         } catch (e) {
           fullContent = "Gagal memuat isi dokumen. Pastikan akses Google Docs telah diatur ke 'Siapa saja yang memiliki link'.";
