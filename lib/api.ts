@@ -43,7 +43,8 @@ async function fetchFromApi<T>(action: string): Promise<T[]> {
 }
 
 export async function getBeritaData(): Promise<BeritaItem[]> {
-  return fetchFromApi<BeritaItem>('getBeritaData');
+  const list = await fetchFromApi<BeritaItem>('getBeritaData');
+  return list.sort((a, b) => Number(b.id) - Number(a.id));
 }
 
 export async function getBeritaById(id: string): Promise<BeritaItem | null> {
