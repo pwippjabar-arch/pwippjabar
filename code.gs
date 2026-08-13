@@ -112,32 +112,74 @@ function getBeritaData() {
           var doc = DocumentApp.openById(docId);
           var body = doc.getBody();
           var numChildren = body.getNumChildren();
-          var paragraphs = [];
+          var htmlParts = [];
+          var plainTexts = [];
           
           for (var j = 0; j < numChildren; j++) {
             var child = body.getChild(j);
             var type = child.getType();
             
             if (type === DocumentApp.ElementType.PARAGRAPH) {
-              paragraphs.push(child.asParagraph().getText());
-            } else if (type === DocumentApp.ElementType.LIST_ITEM) {
-              paragraphs.push(child.asListItem().getText());
-            } else if (type === DocumentApp.ElementType.TABLE) {
-              var table = child.asTable();
-              for (var r = 0; r < table.getNumRows(); r++) {
-                var row = table.getRow(r);
-                for (var c = 0; c < row.getNumCells(); c++) {
-                  paragraphs.push(row.getCell(c).getText());
+              var paragraph = child.asParagraph();
+              var text = paragraph.getText().trim();
+              plainTexts.push(text);
+              
+              // Check for inline images inside paragraph
+              var numParagraphChildren = paragraph.getNumChildren();
+              var hasImage = false;
+              var paraHtml = "";
+              
+              for (var k = 0; k < numParagraphChildren; k++) {
+                var pChild = paragraph.getChild(k);
+                if (pChild.getType() === DocumentApp.ElementType.INLINE_IMAGE) {
+                  hasImage = true;
+                  try {
+                    var img = pChild.asInlineImage();
+                    var blob = img.getBlob();
+                    var base64 = Utilities.base64Encode(blob.getBytes());
+                    var dataUrl = "data:" + blob.getContentType() + ";base64," + base64;
+                    paraHtml += '<img src="' + dataUrl + '" alt="Foto Dokumentasi" class="w-full max-w-lg mx-auto rounded-2xl my-6 shadow-sm object-cover" />';
+                  } catch (e) {
+                    paraHtml += '[Gambar gagal dimuat]';
+                  }
+                } else {
+                  paraHtml += escapeHtml(pChild.getText());
                 }
               }
+              
+              if (hasImage) {
+                htmlParts.push(paraHtml);
+              } else if (text !== "") {
+                htmlParts.push('<p class="text-justify leading-relaxed mb-4">' + escapeHtml(text) + '</p>');
+              }
+            } else if (type === DocumentApp.ElementType.LIST_ITEM) {
+              var listItem = child.asListItem();
+              plainTexts.push(listItem.getText());
+              htmlParts.push('<li class="list-disc list-inside ml-4 mb-2 text-justify">' + escapeHtml(listItem.getText()) + '</li>');
+            } else if (type === DocumentApp.ElementType.TABLE) {
+              var table = child.asTable();
+              var tableHtml = '<div class="overflow-x-auto my-6"><table class="min-w-full divide-y divide-gray-200 border border-gray-100 rounded-xl">';
+              for (var r = 0; r < table.getNumRows(); r++) {
+                tableHtml += '<tr class="border-b border-gray-100">';
+                var row = table.getRow(r);
+                for (var c = 0; c < row.getNumCells(); c++) {
+                  var cellText = row.getCell(c).getText();
+                  plainTexts.push(cellText);
+                  tableHtml += '<td class="px-4 py-3 text-sm text-gray-600 border-r border-gray-100">' + escapeHtml(cellText) + '</td>';
+                }
+                tableHtml += '</tr>';
+              }
+              tableHtml += '</table></div>';
+              htmlParts.push(tableHtml);
             }
           }
           
-          fullContent = paragraphs.join("\n");
-          snippet = fullContent.length > 150 ? fullContent.substring(0, 150) + "..." : fullContent;
+          fullContent = htmlParts.join("");
+          var plainTextAll = plainTexts.join(" ");
+          snippet = plainTextAll.length > 150 ? plainTextAll.substring(0, 150) + "..." : plainTextAll;
         } catch (e) {
-          fullContent = "Gagal memuat isi dokumen. Pastikan akses Google Docs telah diatur ke 'Siapa saja yang memiliki link'.";
-          snippet = fullContent;
+          fullContent = "<p>Gagal memuat isi dokumen. Pastikan akses Google Docs telah diatur ke 'Siapa saja yang memiliki link'.</p>";
+          snippet = "Gagal memuat isi dokumen.";
         }
       }
 
@@ -155,6 +197,16 @@ function getBeritaData() {
   } catch (e) {
     return [];
   }
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function convertGDriveUrl(url) {
