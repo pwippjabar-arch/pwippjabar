@@ -32,14 +32,71 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-red-50/50 via-white to-gray-50 pt-10 sm:pt-16 pb-14 sm:pb-20 overflow-hidden">
+      {/* ===== HERO SECTION ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-red-50/60 via-white to-gray-50 pt-12 sm:pt-20 pb-16 sm:pb-24">
+
+        {/* Dekorasi Blob Merah Blur */}
+        <div className="pointer-events-none absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-brand-red/10 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/2 -right-40 w-[380px] h-[380px] rounded-full bg-brand-darkred/10 blur-3xl" />
+
+        {/* Motif Batik Sunda SVG — sudut kiri bawah */}
+        <svg
+          className="pointer-events-none absolute bottom-0 left-0 w-48 sm:w-72 opacity-[0.07] text-brand-red"
+          viewBox="0 0 200 200"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          {/* Motif Kawung — batik Sunda paling khas */}
+          {[0,1,2,3].map((row) =>
+            [0,1,2,3].map((col) => {
+              const cx = 25 + col * 50;
+              const cy = 25 + row * 50;
+              return (
+                <g key={`${row}-${col}`}>
+                  <ellipse cx={cx} cy={cy - 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
+                  <ellipse cx={cx} cy={cy + 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
+                  <ellipse cx={cx - 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
+                  <ellipse cx={cx + 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
+                  <circle cx={cx} cy={cy} r="4" stroke="#D90429" strokeWidth="1" />
+                </g>
+              );
+            })
+          )}
+        </svg>
+
+        {/* Motif Batik Sunda SVG — sudut kanan atas */}
+        <svg
+          className="pointer-events-none absolute top-0 right-0 w-48 sm:w-72 opacity-[0.07] text-brand-red rotate-180"
+          viewBox="0 0 200 200"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          {[0,1,2,3].map((row) =>
+            [0,1,2,3].map((col) => {
+              const cx = 25 + col * 50;
+              const cy = 25 + row * 50;
+              return (
+                <g key={`${row}-${col}`}>
+                  <ellipse cx={cx} cy={cy - 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
+                  <ellipse cx={cx} cy={cy + 12} rx="10" ry="12" stroke="#D90429" strokeWidth="1.5" />
+                  <ellipse cx={cx - 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
+                  <ellipse cx={cx + 12} cy={cy} rx="12" ry="10" stroke="#D90429" strokeWidth="1.5" />
+                  <circle cx={cx} cy={cy} r="4" stroke="#D90429" strokeWidth="1" />
+                </g>
+              );
+            })
+          )}
+        </svg>
+
+        {/* Konten Hero */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto animate-fade-up">
             <span className="inline-block px-3.5 py-1 mb-4 sm:mb-6 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-brand-red bg-red-100/60 rounded-full border border-red-200">
-              Kritis, Ilmiah, Responsif
+              Kritis · Ilmiah · Responsif
             </span>
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-brand-dark tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-brand-dark dark:text-white tracking-tight leading-tight">
               Membangun Generasi{' '}
               <span className="bg-gradient-to-r from-brand-red to-brand-darkred bg-clip-text text-transparent">
                 Ar-Rasikhuna Fil-&apos;Ilmi
@@ -49,8 +106,8 @@ export default async function HomePage() {
                 Ibadurrahman
               </span>
             </h1>
-            <p className="mt-4 sm:mt-6 text-sm sm:text-lg text-gray-600 leading-relaxed px-2 sm:px-0">
-              Pimpinan Wilayah Ikatan Pelajar Persis Jawa Barat berfokus pada pembinaan potensi pelajar dalam pengembangkan karakter, keilmuan, dan juga kepemimpinan, selain itu Kami juga berusaha menciptakan ruang inklusif dan juga aman bagi semua pelajar.
+            <p className="mt-4 sm:mt-6 text-sm sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed px-2 sm:px-0">
+              Pimpinan Wilayah Ikatan Pelajar Persis Jawa Barat berfokus pada pembinaan potensi pelajar dalam pengembangan karakter, keilmuan, dan kepemimpinan.
             </p>
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4 sm:px-0">
               <Link
@@ -61,13 +118,13 @@ export default async function HomePage() {
               </Link>
               <Link
                 href="/pendaftaran"
-                className="w-full sm:w-auto px-7 py-3.5 bg-white text-brand-dark font-bold rounded-xl border border-gray-200 shadow-sm hover:bg-gray-50 transition transform hover:-translate-y-0.5 text-sm sm:text-base text-center"
+                className="w-full sm:w-auto px-7 py-3.5 bg-white dark:bg-gray-800 text-brand-dark dark:text-white font-bold rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition transform hover:-translate-y-0.5 text-sm sm:text-base text-center"
               >
                 Pendaftaran Kegiatan
               </Link>
               <Link
                 href="/kontak"
-                className="w-full sm:w-auto px-7 py-3.5 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition text-sm sm:text-base text-center"
+                className="w-full sm:w-auto px-7 py-3.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition text-sm sm:text-base text-center"
               >
                 Hubungi Kami
               </Link>
@@ -76,22 +133,22 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* STATISTIK ORGANISASI (Count Up Animation on Scroll) */}
+      {/* STATISTIK ORGANISASI */}
       <StatCounter />
 
-      {/* KABAR TERBARU SECTION WITH CONTRASTING BG */}
+      {/* KABAR TERBARU */}
       {latestNews.length > 0 && (
-        <section className="py-16 bg-red-50/10 border-b border-gray-100">
+        <section className="py-16 bg-red-50/10 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
               <div>
-                <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 px-3 py-1 rounded-full">
+                <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
                   Informasi Terbaru
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold text-brand-dark mt-3">
+                <h2 className="text-2xl sm:text-3xl font-bold text-brand-dark dark:text-white mt-3">
                   Kabar & Berita Terkini
                 </h2>
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                   Ikuti perkembangan pergerakan dan aktivitas PW IPP Jawa Barat.
                 </p>
               </div>
