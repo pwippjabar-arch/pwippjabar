@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getBeritaById, getBeritaData } from '@/lib/api';
+import BeritaCard from '@/components/BeritaCard';
 import ShareButton from './ShareButton';
 import { DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
 
@@ -74,6 +75,14 @@ export default async function BeritaDetailPage({ params }: Props) {
 
   const shareUrl = `${SITE_URL}/berita/${item.id}`;
 
+  let relatedNews = [];
+  try {
+    const allNews = await getBeritaData();
+    relatedNews = allNews.filter((b) => String(b.id) !== String(item.id)).slice(0, 3);
+  } catch {
+    relatedNews = [];
+  }
+
   return (
     <div className="py-10 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
       {/* Tombol Kembali ke Daftar Berita */}
@@ -119,6 +128,21 @@ export default async function BeritaDetailPage({ params }: Props) {
           dangerouslySetInnerHTML={{ __html: item.fullContent }}
         />
       </article>
+
+      {/* Rekomendasi Berita Lainnya / Baca Juga */}
+      {relatedNews.length > 0 && (
+        <div className="mt-14 pt-10 border-t border-gray-200 dark:border-gray-800">
+          <h3 className="text-xl font-bold text-brand-dark dark:text-white mb-6 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-brand-red inline-block"></span>
+            <span>Baca Juga Artikel Lainnya</span>
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            {relatedNews.map((relItem) => (
+              <BeritaCard key={relItem.id} item={relItem} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
