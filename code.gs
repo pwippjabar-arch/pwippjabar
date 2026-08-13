@@ -135,10 +135,12 @@ function getBeritaData() {
                   hasImage = true;
                   try {
                     var img = pChild.asInlineImage();
+                    var width = img.getWidth();
+                    var height = img.getHeight();
                     var blob = img.getBlob();
                     var base64 = Utilities.base64Encode(blob.getBytes());
                     var dataUrl = "data:" + blob.getContentType() + ";base64," + base64;
-                    paraHtml += '<img src="' + dataUrl + '" alt="Foto Dokumentasi" class="w-full max-w-lg mx-auto rounded-2xl my-6 shadow-sm object-cover" />';
+                    paraHtml += '<img src="' + dataUrl + '" alt="Foto Dokumentasi" width="' + width + '" height="' + height + '" style="max-width:100%; height:auto;" class="mx-auto rounded-2xl my-6 shadow-sm block" />';
                   } catch (e) {
                     paraHtml += '[Gambar gagal dimuat]';
                   }
