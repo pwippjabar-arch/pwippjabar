@@ -84,7 +84,7 @@ export default function DaerahClient({ pdList }: DaerahClientProps) {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-brand-dark dark:text-white">
-            Pimpinan Daerah
+            Direktori Pimpinan Daerah
           </h1>
           <p className="mt-4 text-gray-600 dark:text-gray-300 text-sm sm:text-base">
             Direktori lengkap Pimpinan Daerah (PD) Ikatan Pelajar Persis se-Jawa Barat.
