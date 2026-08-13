@@ -113,10 +113,11 @@ export default async function BeritaDetailPage({ params }: Props) {
           {item.judul}
         </h1>
 
-        {/* Isi Berita (Formatted Justify) */}
-        <div className="text-gray-700 text-sm sm:text-base space-y-4 whitespace-pre-line leading-relaxed text-justify border-t border-gray-50 pt-6">
-          {item.fullContent}
-        </div>
+        {/* Isi Berita (Formatted HTML) */}
+        <div
+          className="text-gray-700 text-sm sm:text-base space-y-4 leading-relaxed border-t border-gray-50 pt-6"
+          dangerouslySetInnerHTML={{ __html: item.fullContent }}
+        />
       </article>
     </div>
   );
