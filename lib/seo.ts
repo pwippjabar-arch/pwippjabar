@@ -43,7 +43,7 @@ export const pageSeoMap: Record<string, { title: string; desc: string; image: st
     image: DEFAULT_IMAGE,
   },
   daerah: {
-    title: "Pimpinan Daerah | PW IPP Jawa Barat",
+    title: "Direktori Pimpinan Daerah | PW IPP Jawa Barat",
     desc: "Direktori lengkap Pimpinan Daerah (PD) Ikatan Pelajar Persis se-Jawa Barat.",
     image: DEFAULT_IMAGE,
   },
