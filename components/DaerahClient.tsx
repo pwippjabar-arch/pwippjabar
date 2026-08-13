@@ -1,11 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { DaerahItem } from '@/lib/api';
 
 interface DaerahClientProps {
   pdList: DaerahItem[];
-  bkcList: DaerahItem[];
 }
 
 function DaerahCard({ item }: { item: DaerahItem }) {
@@ -79,71 +77,29 @@ function DaerahCard({ item }: { item: DaerahItem }) {
   );
 }
 
-export default function DaerahClient({ pdList, bkcList }: DaerahClientProps) {
-  const [activeTab, setActiveTab] = useState<'PD' | 'BKC'>('PD');
-
-  const displayList = activeTab === 'PD' ? pdList : bkcList;
-
+export default function DaerahClient({ pdList }: DaerahClientProps) {
   return (
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-brand-dark dark:text-white">
-            Pimpinan Daerah & Cabang
+            Pimpinan Daerah
           </h1>
           <p className="mt-4 text-gray-600 dark:text-gray-300 text-sm sm:text-base">
-            Direktori lengkap Pimpinan Daerah (PD) dan Badan Koordinasi Cabang (BKC) Ikatan Pelajar Persis se-Jawa Barat.
+            Direktori lengkap Pimpinan Daerah (PD) Ikatan Pelajar Persis se-Jawa Barat.
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex justify-center mb-10">
-          <div className="inline-flex bg-gray-100 dark:bg-gray-800 rounded-2xl p-1 gap-1">
-            <button
-              type="button"
-              onClick={() => setActiveTab('PD')}
-              className={`px-6 py-2.5 text-sm font-bold rounded-xl transition cursor-pointer ${
-                activeTab === 'PD'
-                  ? 'bg-white dark:bg-gray-700 text-brand-red shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-brand-dark dark:hover:text-white'
-              }`}
-            >
-              Pimpinan Daerah (PD)
-              <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${
-                activeTab === 'PD' ? 'bg-red-50 text-brand-red' : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
-              }`}>
-                {pdList.length}
-              </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('BKC')}
-              className={`px-6 py-2.5 text-sm font-bold rounded-xl transition cursor-pointer ${
-                activeTab === 'BKC'
-                  ? 'bg-white dark:bg-gray-700 text-blue-600 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-brand-dark dark:hover:text-white'
-              }`}
-            >
-              BKC
-              <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${
-                activeTab === 'BKC' ? 'bg-blue-50 text-blue-600' : 'bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
-              }`}>
-                {bkcList.length}
-              </span>
-            </button>
-          </div>
-        </div>
-
         {/* Cards Grid */}
-        {displayList.length === 0 ? (
+        {pdList.length === 0 ? (
           <div className="text-center py-16 text-gray-500 dark:text-gray-400">
-            <p className="text-sm">Belum ada data {activeTab} yang tersedia.</p>
+            <p className="text-sm">Belum ada data Pimpinan Daerah yang tersedia.</p>
             <p className="text-xs mt-2 text-gray-400">Silakan isi data di sheet &quot;Daerah&quot; pada Spreadsheet.</p>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {displayList.map((item) => (
+            {pdList.map((item) => (
               <DaerahCard key={item.id} item={item} />
             ))}
           </div>
