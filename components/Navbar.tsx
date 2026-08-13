@@ -39,7 +39,7 @@ export default function Navbar() {
     { name: 'Tentang Kami', href: '/about' },
     { name: 'Bidang', href: '/bidang' },
     { name: 'Tasykil', href: '/tasykil' },
-    { name: 'Daerah & Cabang', href: '/daerah' },
+    { name: 'Pimpinan Daerah', href: '/daerah' },
     { name: 'Berita', href: '/berita' },
     { name: 'Galeri', href: '/galeri' },
     { name: 'Pendaftaran', href: '/pendaftaran' },
