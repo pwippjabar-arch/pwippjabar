@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getBeritaById, getBeritaData } from '@/lib/api';
+import { getBeritaById, getBeritaData, BeritaItem } from '@/lib/api';
 import BeritaCard from '@/components/BeritaCard';
 import ShareButton from './ShareButton';
 import { DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
@@ -75,7 +75,7 @@ export default async function BeritaDetailPage({ params }: Props) {
 
   const shareUrl = `${SITE_URL}/berita/${item.id}`;
 
-  let relatedNews = [];
+  let relatedNews: BeritaItem[] = [];
   try {
     const allNews = await getBeritaData();
     relatedNews = allNews.filter((b) => String(b.id) !== String(item.id)).slice(0, 3);
