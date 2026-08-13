@@ -104,9 +104,12 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            {/* Mobile Touch Swipe Carousel / Desktop Grid */}
+            <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
               {latestNews.map((item) => (
-                <BeritaCard key={item.id} item={item} />
+                <div key={item.id} className="min-w-[85%] sm:min-w-[70%] md:min-w-0 snap-center flex flex-col">
+                  <BeritaCard item={item} />
+                </div>
               ))}
             </div>
           </div>
