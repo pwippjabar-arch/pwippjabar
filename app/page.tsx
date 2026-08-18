@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import StatCounter from '@/components/StatCounter';
 import BeritaCard from '@/components/BeritaCard';
+import PetaJabarInteraktif from '@/components/PetaJabarInteraktif';
 import { getBeritaData, getPendaftaranData, getDaerahData, BeritaItem, PendaftaranItem, DaerahItem } from '@/lib/api';
 import { pageSeoMap, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
@@ -432,49 +433,15 @@ export default async function HomePage() {
               Jaringan Wilayah
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
-              Sebaran Pimpinan Daerah se-Jawa Barat
+              Peta Sebaran Pimpinan Daerah se-Jawa Barat
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
-              Membina dan menggerakkan potensi pelajar Persis di berbagai kota dan kabupaten se-Jawa Barat.
+              Jelajahi jaringan kepengurusan 12 Pimpinan Daerah Ikatan Pelajar Persis yang aktif membina kader di Jawa Barat.
             </p>
           </div>
 
-          {/* Badges Grid Daerah */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-10">
-            {(daerahList.length > 0
-              ? daerahList.map((d) => d.nama)
-              : DEFAULT_DAERAH_LIST
-            ).map((namaDaerah, idx) => (
-              <div
-                key={idx}
-                className="bg-white dark:bg-gray-800 p-3.5 rounded-2xl border border-gray-200/80 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-brand-red/50 dark:hover:border-brand-red/50 transition-all text-center flex flex-col items-center justify-center gap-1 group"
-              >
-                <span className="w-2 h-2 rounded-full bg-brand-red group-hover:scale-125 transition-transform" />
-                <span className="text-xs font-bold text-brand-dark dark:text-white group-hover:text-brand-red transition-colors line-clamp-1">
-                  {namaDaerah}
-                </span>
-                <span className="text-[10px] text-gray-400 dark:text-gray-500">Jawa Barat</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Banner Call-to-Action Direktori PD */}
-          <div className="bg-gradient-to-r from-brand-dark via-gray-900 to-brand-dark text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="text-center sm:text-left">
-              <h3 className="text-lg sm:text-xl font-bold mb-1">
-                Ingin Terhubung dengan Pimpinan Daerah Terdekat?
-              </h3>
-              <p className="text-gray-400 text-xs sm:text-sm">
-                Lihat daftar pengurus, informasi kontak WhatsApp, dan akun Instagram resmi tiap daerah.
-              </p>
-            </div>
-            <Link
-              href="/daerah"
-              className="px-6 py-3 bg-gradient-to-r from-brand-red to-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-red-glow hover:opacity-95 transition transform hover:-translate-y-0.5 flex-shrink-0 text-center"
-            >
-              Buka Direktori Pimpinan Daerah &rarr;
-            </Link>
-          </div>
+          {/* Komponen Peta Interaktif Jawa Barat + Panel Info */}
+          <PetaJabarInteraktif serverDaerahList={daerahList} />
         </div>
       </section>
     </>
