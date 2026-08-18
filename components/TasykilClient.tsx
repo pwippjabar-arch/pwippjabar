@@ -3,6 +3,19 @@
 import { useEffect, useState } from 'react';
 import { getTasykilData, TasykilItem } from '@/lib/api';
 
+function getOptimizedPhotoUrl(url: string) {
+  if (!url) return 'https://via.placeholder.com/300x300?text=No+Foto';
+  if (url.includes('lh3.googleusercontent.com/d/')) {
+    const baseUrl = url.split('=')[0];
+    return `${baseUrl}=s300-c`;
+  }
+  const match = url.match(/[-\w]{25,}/);
+  if (url.includes('drive.google.com') && match) {
+    return `https://lh3.googleusercontent.com/d/${match[0]}=s300-c`;
+  }
+  return url;
+}
+
 export default function TasykilClient() {
   const [tasykilList, setTasykilList] = useState<TasykilItem[]>([]);
   const [filteredList, setFilteredList] = useState<TasykilItem[]>([]);
@@ -93,7 +106,7 @@ export default function TasykilClient() {
                 <div className="w-full flex flex-col items-center">
                   <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden mb-3 border-2 border-brand-red/20 shadow-sm bg-gray-50 flex items-center justify-center">
                     <img
-                      src={item.foto || 'https://via.placeholder.com/300x300?text=No+Foto'}
+                      src={getOptimizedPhotoUrl(item.foto)}
                       alt={item.nama}
                       className="w-full h-full object-cover"
                       onError={(e) => {
