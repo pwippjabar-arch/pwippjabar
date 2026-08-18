@@ -15,6 +15,8 @@ function doGet(e) {
         result = getPendaftaranData();
       } else if (action === 'getDaerahData') {
         result = getDaerahData();
+      } else if (action === 'getPengumumanData') {
+        result = getPengumumanData();
       } else if (action === 'all') {
         result = {
           tasykil: getTasykilData(),
@@ -335,4 +337,40 @@ function getDaerahData() {
     return [];
   }
 }
+
+function getPengumumanData() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('Pengumuman');
+
+    if (!sheet) return [];
+
+    var data = sheet.getDataRange().getValues();
+    var result = [];
+
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      var judul = row[0] ? row[0].toString().trim() : '';
+      if (!judul) continue;
+
+      var tanggal = row[1] ? row[1].toString().trim() : '';
+      if (row[1] instanceof Date) {
+        tanggal = Utilities.formatDate(row[1], 'GMT+7', 'dd MMMM yyyy');
+      }
+
+      result.push({
+        id: i,
+        judul: judul,
+        tanggal: tanggal,
+        kategori: row[2] ? row[2].toString().trim() : 'Maklumat',
+        isi: row[3] ? row[3].toString().trim() : '',
+        linkDokumen: row[4] ? row[4].toString().trim() : ''
+      });
+    }
+    return result;
+  } catch (e) {
+    return [];
+  }
+}
+
 
