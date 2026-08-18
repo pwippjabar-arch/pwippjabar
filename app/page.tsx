@@ -1,7 +1,17 @@
 import Link from 'next/link';
 import StatCounter from '@/components/StatCounter';
 import BeritaCard from '@/components/BeritaCard';
-import { getBeritaData, getPendaftaranData, getPengumumanData, BeritaItem, PendaftaranItem, PengumumanItem } from '@/lib/api';
+import KotakAspirasi from '@/components/KotakAspirasi';
+import {
+  getBeritaData,
+  getPendaftaranData,
+  getPengumumanData,
+  getGaleriData,
+  BeritaItem,
+  PendaftaranItem,
+  PengumumanItem,
+  GaleriItem,
+} from '@/lib/api';
 import { pageSeoMap, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -25,6 +35,7 @@ export default async function HomePage() {
   let latestNews: BeritaItem[] = [];
   let openAgendas: PendaftaranItem[] = [];
   let pengumumanList: PengumumanItem[] = [];
+  let galeriList: GaleriItem[] = [];
 
   try {
     const allNews = await getBeritaData();
@@ -47,6 +58,13 @@ export default async function HomePage() {
     pengumumanList = await getPengumumanData();
   } catch (err) {
     console.error('Gagal memuat pengumuman di beranda:', err);
+  }
+
+  try {
+    const allGaleri = await getGaleriData();
+    galeriList = allGaleri.slice(0, 6);
+  } catch (err) {
+    console.error('Gagal memuat galeri di beranda:', err);
   }
 
   return (
@@ -218,7 +236,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ===== 4. KABAR & BERITA TERKINI (POSISI DITUKAR KE ATAS) ===== */}
+      {/* ===== 4. KABAR & BERITA TERKINI ===== */}
       {latestNews.length > 0 && (
         <section className="py-16 sm:py-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -255,7 +273,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ===== 5. AGENDA & PENDAFTARAN TERBUKA (POSISI DITUKAR KE BAWAH) ===== */}
+      {/* ===== 5. AGENDA & PENDAFTARAN TERBUKA ===== */}
       <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
@@ -369,6 +387,63 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* ===== 6. SOROTAN GALERI & DOKUMENTASI KEGIATAN ===== */}
+      {galeriList.length > 0 && (
+        <section className="py-16 sm:py-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
+              <div>
+                <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
+                  Dokumentasi & Aksi
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
+                  Sorotan Galeri Kegiatan Pelajar
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                  Rekam jejak aktivitas, kaderisasi, dan aksi nyata pelajar Persis di Jawa Barat.
+                </p>
+              </div>
+              <Link
+                href="/galeri"
+                className="mt-4 md:mt-0 text-sm font-bold text-brand-red hover:underline flex items-center gap-1.5"
+              >
+                <span>Lihat Semua Galeri</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+
+            {/* Grid Foto Galeri dengan Efek Hover Zoom & Overlay */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+              {galeriList.map((item, idx) => (
+                <Link
+                  key={item.id || idx}
+                  href="/galeri"
+                  className="group relative overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800 aspect-square shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 block cursor-pointer"
+                >
+                  <img
+                    src={item.foto || 'https://via.placeholder.com/400x400?text=No+Foto'}
+                    alt={item.judul || 'Dokumentasi IPP'}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  {/* Overlay Gradient Merah saat Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-red/90 via-brand-red/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 rounded-2xl">
+                    <span className="text-white text-[10px] font-bold leading-tight line-clamp-2 drop-shadow-sm">
+                      {item.judul || 'Kegiatan PW IPP'}
+                    </span>
+                    <span className="text-white/80 text-[9px] mt-1 font-semibold">
+                      Lihat Foto &rarr;
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ===== 7. KOTAK SARAN & ASPIRASI PELAJAR SE-JAWA BARAT ===== */}
+      <KotakAspirasi />
     </>
   );
 }
