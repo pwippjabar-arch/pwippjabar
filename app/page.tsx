@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import StatCounter from '@/components/StatCounter';
 import BeritaCard from '@/components/BeritaCard';
-import FaqSection from '@/components/FaqSection';
 import { getBeritaData, getPendaftaranData, getPengumumanData, BeritaItem, PendaftaranItem, PengumumanItem } from '@/lib/api';
 import { pageSeoMap, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
@@ -154,46 +153,46 @@ export default async function HomePage() {
       {/* ===== 2. STATISTIK ORGANISASI ===== */}
       <StatCounter />
 
-      {/* ===== 3. KILAS SIARAN PERS & MAKLUMAT RESMI ===== */}
+      {/* ===== 3. PENGUMUMAN RESMI ===== */}
       <section className="py-14 sm:py-18 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
             <div>
               <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
                 <span className="w-2 h-2 rounded-full bg-brand-red animate-ping inline-block" />
-                Maklumat & Siaran Pers
+                Pengumuman
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
-                Kilas Maklumat Resmi PW IPP Jawa Barat
+                Pengumuman Resmi PW IPP Jawa Barat
               </h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                Informasi resmi, maklumat pimpinan, dan siaran pers terverifikasi dari Pimpinan Wilayah.
+                Informasi dan pengumuman resmi terverifikasi dari Pimpinan Wilayah Ikatan Pelajar Persis Jawa Barat.
               </p>
             </div>
           </div>
 
           {pengumumanList.length === 0 ? (
-            <div className="bg-gradient-to-r from-red-50/70 via-gray-50 to-red-50/40 dark:from-gray-800/80 dark:via-gray-800 dark:to-gray-850 rounded-3xl p-6 sm:p-8 border border-red-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+            <div className="bg-gradient-to-r from-brand-red via-red-600 to-brand-darkred text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-red-700">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-brand-red text-white flex items-center justify-center flex-shrink-0 shadow-red-glow">
+                <div className="w-12 h-12 rounded-2xl bg-white/20 text-white flex items-center justify-center flex-shrink-0 backdrop-blur-sm shadow-inner">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-bold text-base sm:text-lg text-brand-dark dark:text-white">
-                    Papan Maklumat & Siaran Pers Terpusat
+                  <h3 className="font-bold text-base sm:text-lg text-white">
+                    Papan Pengumuman Resmi
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">
-                    Seluruh maklumat penting dan rilis sikap resmi pimpinan wilayah akan disiarkan secara berkala di sini.
+                  <p className="text-xs sm:text-sm text-red-100 mt-1">
+                    Seluruh pengumuman penting akan disiarkan secara berkala di sini.
                   </p>
                 </div>
               </div>
               <Link
                 href="/berita"
-                className="px-6 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-red-glow transition flex-shrink-0 text-center"
+                className="px-6 py-3 bg-white hover:bg-gray-100 text-brand-red text-xs sm:text-sm font-bold rounded-xl shadow-md transition flex-shrink-0 text-center"
               >
-                Baca Kabar & Rilis Lengkap &rarr;
+                Lihat Kabar & Berita Lengkap &rarr;
               </Link>
             </div>
           ) : (
@@ -201,30 +200,30 @@ export default async function HomePage() {
               {pengumumanList.slice(0, 3).map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200/80 dark:border-gray-700 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+                  className="bg-gradient-to-br from-brand-red to-brand-darkred text-white rounded-2xl p-6 shadow-md hover:shadow-xl transition flex flex-col justify-between border border-red-700"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-red-50 text-brand-red dark:bg-red-900/30">
-                        {item.kategori || 'Maklumat'}
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-white/20 text-white backdrop-blur-sm">
+                        {item.kategori || 'Pengumuman'}
                       </span>
-                      <span className="text-xs text-gray-400 dark:text-gray-500">{item.tanggal}</span>
+                      <span className="text-xs text-red-200">{item.tanggal}</span>
                     </div>
-                    <h3 className="font-bold text-base text-brand-dark dark:text-white mb-2 line-clamp-2">
+                    <h3 className="font-bold text-base text-white mb-2 line-clamp-2">
                       {item.judul}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-xs line-clamp-3 leading-relaxed mb-4">
+                    <p className="text-red-100 text-xs line-clamp-3 leading-relaxed mb-4">
                       {item.isi}
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-gray-100 dark:border-gray-700/80">
+                  <div className="pt-3 border-t border-red-400/40">
                     {item.linkDokumen && item.linkDokumen !== '#' ? (
                       <a
                         href={item.linkDokumen}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-bold text-brand-red hover:underline flex items-center gap-1"
+                        className="text-xs font-bold text-white hover:underline flex items-center gap-1"
                       >
                         <span>Unduh / Baca Dokumen Resmi</span>
                         <span>&rarr;</span>
@@ -232,7 +231,7 @@ export default async function HomePage() {
                     ) : (
                       <Link
                         href="/berita"
-                        className="text-xs font-bold text-brand-red hover:underline flex items-center gap-1"
+                        className="text-xs font-bold text-white hover:underline flex items-center gap-1"
                       >
                         <span>Lihat Selengkapnya</span>
                         <span>&rarr;</span>
@@ -397,9 +396,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* ===== 6. TANYA JAWAB (FAQ) INTERAKTIF ===== */}
-      <FaqSection />
     </>
   );
 }
