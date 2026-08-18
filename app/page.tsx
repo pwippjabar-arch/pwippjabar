@@ -153,99 +153,113 @@ export default async function HomePage() {
       {/* ===== 2. STATISTIK ORGANISASI ===== */}
       <StatCounter />
 
-      {/* ===== 3. PENGUMUMAN RESMI ===== */}
-      <section className="py-14 sm:py-18 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
-            <div>
-              <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
-                <span className="w-2 h-2 rounded-full bg-brand-red animate-ping inline-block" />
-                Pengumuman
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
-                Pengumuman Resmi PW IPP Jawa Barat
-              </h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                Informasi dan pengumuman resmi terverifikasi dari Pimpinan Wilayah Ikatan Pelajar Persis Jawa Barat.
-              </p>
-            </div>
-          </div>
-
-          {pengumumanList.length === 0 ? (
-            <div className="bg-gradient-to-r from-brand-red via-red-600 to-brand-darkred text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-red-700">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-white/20 text-white flex items-center justify-center flex-shrink-0 backdrop-blur-sm shadow-inner">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-base sm:text-lg text-white">
-                    Papan Pengumuman Resmi
-                  </h3>
-                  <p className="text-xs sm:text-sm text-red-100 mt-1">
-                    Seluruh pengumuman penting akan disiarkan secara berkala di sini.
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/berita"
-                className="px-6 py-3 bg-white hover:bg-gray-100 text-brand-red text-xs sm:text-sm font-bold rounded-xl shadow-md transition flex-shrink-0 text-center"
-              >
-                Lihat Kabar & Berita Lengkap &rarr;
-              </Link>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {pengumumanList.slice(0, 3).map((item) => (
+      {/* ===== 3. PENGUMUMAN (HANYA MUNCUL JIKA ADA DATA) ===== */}
+      {pengumumanList.length > 0 && (
+        <section className="py-6 sm:py-8 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="space-y-4">
+              {pengumumanList.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-gradient-to-br from-brand-red to-brand-darkred text-white rounded-2xl p-6 shadow-md hover:shadow-xl transition flex flex-col justify-between border border-red-700"
+                  className="bg-gradient-to-r from-brand-red via-red-600 to-brand-darkred text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-red-700 relative overflow-hidden"
                 >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-white/20 text-white backdrop-blur-sm">
-                        {item.kategori || 'Pengumuman'}
+                  {/* Top Bar inside Box: Toa Icon + PENGUMUMAN + Tanggal */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-white/20">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 shadow-inner">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                        </svg>
+                      </div>
+                      <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-white">
+                        PENGUMUMAN
                       </span>
-                      <span className="text-xs text-red-200">{item.tanggal}</span>
+                      {item.kategori && item.kategori.toLowerCase() !== 'pengumuman' && (
+                        <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white/20 text-white backdrop-blur-sm ml-1">
+                          {item.kategori}
+                        </span>
+                      )}
                     </div>
-                    <h3 className="font-bold text-base text-white mb-2 line-clamp-2">
-                      {item.judul}
-                    </h3>
-                    <p className="text-red-100 text-xs line-clamp-3 leading-relaxed mb-4">
-                      {item.isi}
-                    </p>
+                    <span className="text-xs text-red-100 font-medium">
+                      {item.tanggal}
+                    </span>
                   </div>
 
-                  <div className="pt-3 border-t border-red-400/40">
-                    {item.linkDokumen && item.linkDokumen !== '#' ? (
-                      <a
-                        href={item.linkDokumen}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs font-bold text-white hover:underline flex items-center gap-1"
-                      >
-                        <span>Unduh / Baca Dokumen Resmi</span>
-                        <span>&rarr;</span>
-                      </a>
-                    ) : (
-                      <Link
-                        href="/berita"
-                        className="text-xs font-bold text-white hover:underline flex items-center gap-1"
-                      >
-                        <span>Lihat Selengkapnya</span>
-                        <span>&rarr;</span>
-                      </Link>
-                    )}
-                  </div>
+                  {/* Body Content */}
+                  <h3 className="text-lg sm:text-2xl font-extrabold text-white mb-2 leading-snug">
+                    {item.judul}
+                  </h3>
+                  {item.isi && (
+                    <p className="text-xs sm:text-sm text-red-100 leading-relaxed mb-5 max-w-4xl">
+                      {item.isi}
+                    </p>
+                  )}
+
+                  {/* Action Link */}
+                  {item.linkDokumen && item.linkDokumen !== '#' ? (
+                    <a
+                      href={item.linkDokumen}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-brand-red font-bold text-xs rounded-xl shadow-md hover:bg-red-50 transition transform hover:-translate-y-0.5"
+                    >
+                      <span>Unduh / Baca Dokumen Lengkap</span>
+                      <span>&rarr;</span>
+                    </a>
+                  ) : (
+                    <Link
+                      href="/berita"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-white hover:underline"
+                    >
+                      <span>Lihat Berita Terkait</span>
+                      <span>&rarr;</span>
+                    </Link>
+                  )}
                 </div>
               ))}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
-      {/* ===== 4. AGENDA & PENDAFTARAN TERBUKA ===== */}
+      {/* ===== 4. KABAR & BERITA TERKINI (POSISI DITUKAR KE ATAS) ===== */}
+      {latestNews.length > 0 && (
+        <section className="py-16 sm:py-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
+              <div>
+                <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
+                  Informasi Terbaru
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
+                  Kabar & Berita Terkini
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                  Ikuti perkembangan pergerakan dan aktivitas PW IPP Jawa Barat.
+                </p>
+              </div>
+              <Link
+                href="/berita"
+                className="mt-4 md:mt-0 text-sm font-bold text-brand-red hover:underline flex items-center gap-1.5"
+              >
+                <span>Lihat Semua Berita</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+
+            {/* Mobile Touch Swipe Carousel / Desktop Grid */}
+            <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+              {latestNews.map((item) => (
+                <div key={item.id} className="min-w-[85%] sm:min-w-[70%] md:min-w-0 snap-center flex flex-col">
+                  <BeritaCard item={item} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ===== 5. AGENDA & PENDAFTARAN TERBUKA (POSISI DITUKAR KE BAWAH) ===== */}
       <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
@@ -359,43 +373,6 @@ export default async function HomePage() {
           )}
         </div>
       </section>
-
-      {/* ===== 5. KABAR & BERITA TERKINI ===== */}
-      {latestNews.length > 0 && (
-        <section className="py-16 sm:py-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
-              <div>
-                <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
-                  Informasi Terbaru
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
-                  Kabar & Berita Terkini
-                </h2>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                  Ikuti perkembangan pergerakan dan aktivitas PW IPP Jawa Barat.
-                </p>
-              </div>
-              <Link
-                href="/berita"
-                className="mt-4 md:mt-0 text-sm font-bold text-brand-red hover:underline flex items-center gap-1.5"
-              >
-                <span>Lihat Semua Berita</span>
-                <span>&rarr;</span>
-              </Link>
-            </div>
-
-            {/* Mobile Touch Swipe Carousel / Desktop Grid */}
-            <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0">
-              {latestNews.map((item) => (
-                <div key={item.id} className="min-w-[85%] sm:min-w-[70%] md:min-w-0 snap-center flex flex-col">
-                  <BeritaCard item={item} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </>
   );
 }
