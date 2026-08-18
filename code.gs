@@ -358,13 +358,24 @@ function getPengumumanData() {
         tanggal = Utilities.formatDate(row[1], 'GMT+7', 'dd MMMM yyyy');
       }
 
+      var linkDokumen = row[4] ? row[4].toString().trim() : '';
+      if (!linkDokumen) {
+        for (var c = 0; c < row.length; c++) {
+          var cellStr = row[c] ? row[c].toString().trim() : '';
+          if (cellStr.indexOf('http://') === 0 || cellStr.indexOf('https://') === 0 || cellStr.indexOf('drive.google.com') === 0) {
+            linkDokumen = cellStr;
+            break;
+          }
+        }
+      }
+
       result.push({
         id: i,
         judul: judul,
         tanggal: tanggal,
-        kategori: row[2] ? row[2].toString().trim() : 'Maklumat',
+        kategori: row[2] ? row[2].toString().trim() : 'Pengumuman',
         isi: row[3] ? row[3].toString().trim() : '',
-        linkDokumen: row[4] ? row[4].toString().trim() : ''
+        linkDokumen: linkDokumen
       });
     }
     return result;
