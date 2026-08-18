@@ -13,6 +13,8 @@ function doGet(e) {
         result = getGaleriData();
       } else if (action === 'getPendaftaranData') {
         result = getPendaftaranData();
+      } else if (action === 'getDaerahData') {
+        result = getDaerahData();
       } else if (action === 'all') {
         result = {
           tasykil: getTasykilData(),
@@ -65,11 +67,12 @@ function getTasykilData() {
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
       if (row[0] && row[0].toString().trim() !== "") {
+        var rawFoto = row[3] ? row[3].toString().trim() : '';
         result.push({
           nama: row[0].toString().trim(),
           jabatan: row[1] ? row[1].toString().trim() : '',
           bidang: row[2] ? row[2].toString().trim() : 'Exofficio',
-          foto: row[3] ? row[3].toString().trim() : ''
+          foto: convertGDriveUrl(rawFoto, 300)
         });
       }
     }
@@ -211,11 +214,12 @@ function escapeHtml(text) {
     .replace(/'/g, "&#039;");
 }
 
-function convertGDriveUrl(url) {
-  if (!url) return 'https://via.placeholder.com/600x400?text=No+Image';
+function convertGDriveUrl(url, size) {
+  if (!url) return 'https://via.placeholder.com/300x300?text=No+Image';
   var match = url.match(/[-\w]{25,}/);
   if (match) {
-    return 'https://lh3.googleusercontent.com/d/' + match[0];
+    var sizeSuffix = size ? '=s' + size + '-c' : '';
+    return 'https://lh3.googleusercontent.com/d/' + match[0] + sizeSuffix;
   }
   return url;
 }
@@ -300,3 +304,35 @@ function getPendaftaranData() {
     return [];
   }
 }
+
+function getDaerahData() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('Daerah');
+
+    if (!sheet) return [];
+
+    var data = sheet.getDataRange().getValues();
+    var result = [];
+
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      var nama = row[0] ? row[0].toString().trim() : '';
+      if (!nama) continue;
+
+      result.push({
+        id: i,
+        nama: nama,
+        tipe: row[1] ? row[1].toString().trim() : 'PD',
+        wilayah: row[2] ? row[2].toString().trim() : '',
+        ketua: row[3] ? row[3].toString().trim() : '',
+        instagram: row[4] ? row[4].toString().trim() : '',
+        kontak: row[5] ? row[5].toString().trim() : ''
+      });
+    }
+    return result;
+  } catch (e) {
+    return [];
+  }
+}
+
