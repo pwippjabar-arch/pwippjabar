@@ -195,26 +195,22 @@ export default async function HomePage() {
                     </p>
                   )}
 
-                  {/* Action Link */}
-                  {item.linkDokumen && item.linkDokumen !== '#' ? (
-                    <a
-                      href={item.linkDokumen}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-brand-red font-bold text-xs rounded-xl shadow-md hover:bg-red-50 transition transform hover:-translate-y-0.5"
-                    >
-                      <span>Unduh / Baca Dokumen Lengkap</span>
-                      <span>&rarr;</span>
-                    </a>
-                  ) : (
-                    <Link
-                      href="/berita"
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-white hover:underline"
-                    >
-                      <span>Lihat Berita Terkait</span>
-                      <span>&rarr;</span>
-                    </Link>
-                  )}
+                  {/* Action Link: Selalu 'Unduh / Baca Dokumen Lengkap' */}
+                  <a
+                    href={
+                      item.linkDokumen && item.linkDokumen !== '#'
+                        ? item.linkDokumen.startsWith('http')
+                          ? item.linkDokumen
+                          : `https://${item.linkDokumen}`
+                        : '#'
+                    }
+                    target={item.linkDokumen && item.linkDokumen !== '#' ? '_blank' : '_self'}
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-brand-red font-bold text-xs sm:text-sm rounded-xl shadow-md hover:bg-red-50 transition transform hover:-translate-y-0.5 w-fit"
+                  >
+                    <span>Unduh / Baca Dokumen Lengkap</span>
+                    <span>&rarr;</span>
+                  </a>
                 </div>
               ))}
             </div>
