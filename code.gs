@@ -17,6 +17,10 @@ function doGet(e) {
         result = getDaerahData();
       } else if (action === 'getPengumumanData') {
         result = getPengumumanData();
+      } else if (action === 'getOpiniData') {
+        result = getOpiniData();
+      } else if (action === 'sendAspirasi') {
+        result = saveAspirasi(e.parameter);
       } else if (action === 'all') {
         result = {
           tasykil: getTasykilData(),
@@ -383,5 +387,122 @@ function getPengumumanData() {
     return [];
   }
 }
+
+function getOpiniData() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('Opini');
+
+    if (!sheet) return [];
+
+    var data = sheet.getDataRange().getValues();
+    var result = [];
+
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      var judul = row[0] ? row[0].toString().trim() : '';
+      if (!judul) continue;
+
+      var tanggal = row[2] ? row[2].toString().trim() : '';
+      if (row[2] instanceof Date) {
+        tanggal = Utilities.formatDate(row[2], 'GMT+7', 'dd MMMM yyyy');
+      }
+
+      result.push({
+        id: i,
+        judul: judul,
+        penulis: row[1] ? row[1].toString().trim() : 'Kader IPP',
+        asalDaerah: row[1] ? row[1].toString().trim() : '',
+        tanggal: tanggal,
+        ringkasan: row[3] ? row[3].toString().trim() : '',
+        linkTulisan: row[4] ? row[4].toString().trim() : ''
+      });
+    }
+    return result;
+  } catch (e) {
+    return [];
+  }
+}
+
+function doPost(e) {
+  try {
+    var data = {};
+    if (e.postData && e.postData.contents) {
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (parseErr) {
+        data = e.parameter || {};
+      }
+    } else if (e.parameter) {
+      data = e.parameter;
+    }
+
+    var action = data.action || (e.parameter && e.parameter.action) || 'sendAspirasi';
+    var res = {};
+    if (action === 'sendAspirasi') {
+      res = saveAspirasi(data);
+    } else {
+      res = { status: 'error', message: 'Action tidak dikenal' };
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify(res))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function saveAspirasi(data) {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('Aspirasi');
+
+    if (!sheet) {
+      sheet = ss.insertSheet('Aspirasi');
+      sheet.appendRow(['Waktu / Tanggal', 'Nama (Anonim/Pena)', 'Asal Daerah / Sekolah', 'Kategori', 'Pesan / Aspirasi']);
+      var headerRange = sheet.getRange(1, 1, 1, 5);
+      headerRange.setBackground('#D90429');
+      headerRange.setFontColor('#FFFFFF');
+      headerRange.setFontWeight('bold');
+    }
+
+    var nama = (data.nama && data.nama.toString().trim() !== '') ? data.nama.toString().trim() : 'Anonim';
+    var asal = (data.asal && data.asal.toString().trim() !== '') ? data.asal.toString().trim() : '-';
+    var kategori = (data.kategori && data.kategori.toString().trim() !== '') ? data.kategori.toString().trim() : 'Usulan Kegiatan';
+    var pesan = (data.pesan && data.pesan.toString().trim() !== '') ? data.pesan.toString().trim() : '';
+    var waktu = Utilities.formatDate(new Date(), 'GMT+7', 'dd MMMM yyyy, HH:mm') + ' WIB';
+
+    if (!pesan) {
+      return { status: 'error', message: 'Pesan aspirasi tidak boleh kosong.' };
+    }
+
+    sheet.appendRow([waktu, nama, asal, kategori, pesan]);
+
+    // Kirim notifikasi email ke pwippjabar@gmail.com
+    try {
+      var subject = '[Aspirasi Pelajar Baru] ' + kategori + ' - ' + nama;
+      var emailBody = 'Bismillah,\n\nTerdapat aspirasi/saran baru yang masuk melalui website resmi PW IPP Jawa Barat:\n\n' +
+        '📅 Waktu: ' + waktu + '\n' +
+        '👤 Nama: ' + nama + '\n' +
+        '📍 Asal: ' + asal + '\n' +
+        '🏷️ Kategori: ' + kategori + '\n\n' +
+        '💬 Isi Pesan / Saran:\n' + pesan + '\n\n' +
+        '---\nPesan ini tersimpan otomatis di Google Spreadsheet (Sheet "Aspirasi").\nPW IPP Jawa Barat';
+
+      MailApp.sendEmail('pwippjabar@gmail.com', subject, emailBody);
+    } catch (mailErr) {
+      // Abaikan error email jika batas harian tercapai
+    }
+
+    return { status: 'success', message: 'Aspirasi Anda berhasil dikirim dan tersimpan secara aman & anonim.' };
+  } catch (err) {
+    return { status: 'error', message: err.toString() };
+  }
+}
+
+
 
 
