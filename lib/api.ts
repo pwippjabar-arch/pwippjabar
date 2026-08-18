@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbz86BuVF-XvwdcWivnVnlJtZd-Y7URqM3NGXan0FA56vJL2f0yHTgZsbFdyvOx4iOHA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxXxWv7NTwOn9s2hfxR1saJIpb6iziNotnGcYZKLx2I4P2gG3bba_JrQs9j9BO_ISb1/exec";
 
 export interface BeritaItem {
   id: number | string;
@@ -44,6 +44,15 @@ export interface DaerahItem {
   kontak: string;
 }
 
+export interface PengumumanItem {
+  id: number | string;
+  judul: string;
+  tanggal: string;
+  kategori: string; // 'Maklumat', 'Siaran Pers', 'Pemberitahuan'
+  isi: string;
+  linkDokumen: string;
+}
+
 async function fetchFromApi<T>(action: string): Promise<T[]> {
   const res = await fetch(`${API_URL}?action=${action}`, { next: { revalidate: 60 } });
   if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
@@ -81,3 +90,13 @@ export async function getPendaftaranData(): Promise<PendaftaranItem[]> {
 export async function getDaerahData(): Promise<DaerahItem[]> {
   return fetchFromApi<DaerahItem>('getDaerahData');
 }
+
+export async function getPengumumanData(): Promise<PengumumanItem[]> {
+  try {
+    return await fetchFromApi<PengumumanItem>('getPengumumanData');
+  } catch (err) {
+    console.error('Gagal mengambil pengumuman:', err);
+    return [];
+  }
+}
+
