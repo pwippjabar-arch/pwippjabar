@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import StatCounter from '@/components/StatCounter';
 import BeritaCard from '@/components/BeritaCard';
-import { getBeritaData, BeritaItem } from '@/lib/api';
+import { getBeritaData, getPendaftaranData, getDaerahData, BeritaItem, PendaftaranItem, DaerahItem } from '@/lib/api';
 import { pageSeoMap, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -21,8 +21,83 @@ export const metadata: Metadata = {
   },
 };
 
+const PILAR_BIDANG = [
+  {
+    nama: 'Pendidikan & Dakwah',
+    deskripsi: 'Memperkokoh pemahaman tsaqafah Islamiyah, aqidah, dan dakwah di kalangan pelajar.',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+    ),
+  },
+  {
+    nama: 'Organisasi & Kelembagaan',
+    deskripsi: 'Menguatkan tata kelola keorganisasian, administrasi, dan soliditas struktur pimpinan.',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+      </svg>
+    ),
+  },
+  {
+    nama: 'Kaderisasi',
+    deskripsi: 'Menyelenggarakan jenjang pembinaan militan berkarakter Ar-Rasikhuna Fil-Ilmi.',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    ),
+  },
+  {
+    nama: 'Pengembangan SDM (PSDM)',
+    deskripsi: 'Mengembangkan bakat, potensi kepemimpinan, riset, dan kecakapan hidup kader.',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+  },
+  {
+    nama: 'Komunikasi & Informasi',
+    deskripsi: 'Pusat publikasi, literasi digital, syiar media sosial, dan dokumentasi pergerakan.',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+      </svg>
+    ),
+  },
+  {
+    nama: 'Ekonomi & Kewirausahaan',
+    deskripsi: 'Menumbuhkan kemandirian finansial kader melalui inkubasi bisnis dan wirausaha muda.',
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
+];
+
+const DEFAULT_DAERAH_LIST = [
+  'Kota Bandung',
+  'Kab. Bandung',
+  'Kab. Bandung Barat',
+  'Kota Cimahi',
+  'Kab. Garut',
+  'Kab. Tasikmalaya',
+  'Kota Tasikmalaya',
+  'Kab. Ciamis',
+  'Kab. Sumedang',
+  'Kab. Majalengka',
+  'Kab. Cirebon',
+  'Kab. Bogor',
+];
+
 export default async function HomePage() {
   let latestNews: BeritaItem[] = [];
+  let openAgendas: PendaftaranItem[] = [];
+  let daerahList: DaerahItem[] = [];
+
   try {
     const allNews = await getBeritaData();
     latestNews = allNews.slice(0, 3);
@@ -30,11 +105,26 @@ export default async function HomePage() {
     console.error('Gagal memuat berita terbaru di beranda:', err);
   }
 
+  try {
+    const allPendaftaran = await getPendaftaranData();
+    openAgendas = allPendaftaran.filter((p) => (p.status || '').toLowerCase().includes('buka')).slice(0, 3);
+    if (openAgendas.length === 0 && allPendaftaran.length > 0) {
+      openAgendas = allPendaftaran.slice(0, 2);
+    }
+  } catch (err) {
+    console.error('Gagal memuat agenda pendaftaran di beranda:', err);
+  }
+
+  try {
+    daerahList = await getDaerahData();
+  } catch (err) {
+    console.error('Gagal memuat daerah di beranda:', err);
+  }
+
   return (
     <>
-      {/* ===== HERO SECTION ===== */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-red-50/60 via-white to-gray-50 pt-12 sm:pt-20 pb-16 sm:pb-24">
-
+      {/* ===== 1. HERO SECTION ===== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-red-50/60 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 pt-12 sm:pt-20 pb-16 sm:pb-24">
         {/* Dekorasi Blob Merah Blur */}
         <div className="pointer-events-none absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-brand-red/10 blur-3xl" />
         <div className="pointer-events-none absolute top-1/2 -right-40 w-[380px] h-[380px] rounded-full bg-brand-darkred/10 blur-3xl" />
@@ -47,9 +137,8 @@ export default async function HomePage() {
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
-          {/* Motif Kawung — batik Sunda paling khas */}
-          {[0,1,2,3].map((row) =>
-            [0,1,2,3].map((col) => {
+          {[0, 1, 2, 3].map((row) =>
+            [0, 1, 2, 3].map((col) => {
               const cx = 25 + col * 50;
               const cy = 25 + row * 50;
               return (
@@ -73,8 +162,8 @@ export default async function HomePage() {
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
-          {[0,1,2,3].map((row) =>
-            [0,1,2,3].map((col) => {
+          {[0, 1, 2, 3].map((row) =>
+            [0, 1, 2, 3].map((col) => {
               const cx = 25 + col * 50;
               const cy = 25 + row * 50;
               return (
@@ -93,7 +182,7 @@ export default async function HomePage() {
         {/* Konten Hero */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto animate-fade-up">
-            <span className="inline-block px-3.5 py-1 mb-4 sm:mb-6 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-brand-red bg-red-100/60 rounded-full border border-red-200">
+            <span className="inline-block px-3.5 py-1 mb-4 sm:mb-6 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-brand-red bg-red-100/60 dark:bg-red-900/30 rounded-full border border-red-200 dark:border-red-800">
               Kritis · Ilmiah · Responsif
             </span>
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-brand-dark dark:text-white tracking-tight leading-tight">
@@ -133,19 +222,181 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* STATISTIK ORGANISASI */}
+      {/* ===== 2. STATISTIK ORGANISASI ===== */}
       <StatCounter />
 
-      {/* KABAR TERBARU */}
+      {/* ===== 3. SECTION 6 PILAR BIDANG PERGERAKAN ===== */}
+      <section className="py-16 sm:py-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
+              Pilar Gerak Organisasi
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
+              6 Bidang Pergerakan PW IPP Jawa Barat
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
+              Fokus pembinaan dan aktualisasi potensi pelajar dalam berbagai ranah keilmuan, kepemimpinan, dan kemandirian.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {PILAR_BIDANG.map((bidang, idx) => (
+              <div
+                key={idx}
+                className="group p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/80 border border-gray-100 dark:border-gray-700/80 shadow-sm hover:shadow-md hover:border-brand-red/40 dark:hover:border-brand-red/40 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-red-100/70 dark:bg-red-900/40 text-brand-red flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-red group-hover:text-white transition-all duration-300">
+                    {bidang.icon}
+                  </div>
+                  <h3 className="font-bold text-lg text-brand-dark dark:text-white mb-2 group-hover:text-brand-red transition-colors">
+                    {bidang.nama}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
+                    {bidang.deskripsi}
+                  </p>
+                </div>
+                <div className="mt-5 pt-3 border-t border-gray-200/60 dark:border-gray-700/60">
+                  <Link
+                    href="/bidang"
+                    className="text-xs font-bold text-brand-red hover:underline inline-flex items-center gap-1 group-hover:gap-2 transition-all"
+                  >
+                    <span>Pelajari Program & Kebijakan</span>
+                    <span>&rarr;</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== 4. AGENDA & PENDAFTARAN TERBUKA ===== */}
+      <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 border-b border-gray-100 dark:border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
+            <div>
+              <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
+                Agenda & Pelatihan
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
+                Pendaftaran Kegiatan Terdekat
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                Ikuti berbagai agenda pembinaan, kaderisasi, dan kegiatan resmi PW IPP Jawa Barat.
+              </p>
+            </div>
+            <Link
+              href="/pendaftaran"
+              className="mt-4 md:mt-0 text-sm font-bold text-brand-red hover:underline flex items-center gap-1.5"
+            >
+              <span>Lihat Semua Pendaftaran</span>
+              <span>&rarr;</span>
+            </Link>
+          </div>
+
+          {openAgendas.length === 0 ? (
+            <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-100 dark:border-gray-700 text-center max-w-2xl mx-auto shadow-sm">
+              <div className="w-12 h-12 mx-auto rounded-full bg-red-50 dark:bg-red-900/30 text-brand-red flex items-center justify-center mb-3">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-base text-brand-dark dark:text-white mb-1">Belum Ada Pendaftaran yang Dibuka</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-5">
+                Pantau terus portal ini untuk informasi jadwal pendaftaran kegiatan mendatang.
+              </p>
+              <Link
+                href="/pendaftaran"
+                className="inline-block px-5 py-2.5 bg-brand-red text-white text-xs font-bold rounded-xl shadow-red-glow hover:opacity-95 transition"
+              >
+                Buka Halaman Pendaftaran
+              </Link>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6">
+              {openAgendas.map((item, idx) => {
+                const isOpen = (item.status || '').toLowerCase().includes('buka');
+                return (
+                  <div
+                    key={item.id || idx}
+                    className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span
+                          className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 ${
+                            isOpen
+                              ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                              : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+                          }`}
+                        >
+                          {isOpen && <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping inline-block" />}
+                          {isOpen ? 'Pendaftaran Dibuka' : 'Pendaftaran Tutup'}
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-base text-brand-dark dark:text-white mb-2 line-clamp-2">
+                        {item.namaKegiatan}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-xs line-clamp-2 mb-4">
+                        {item.deskripsi || 'Kegiatan resmi Pimpinan Wilayah Ikatan Pelajar Persis Jawa Barat.'}
+                      </p>
+
+                      <div className="space-y-1.5 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-3">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-3.5 h-3.5 text-brand-red flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span>{item.tanggal || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <svg className="w-3.5 h-3.5 text-brand-red flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span className="truncate">{item.tempat || '-'}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 pt-3">
+                      {isOpen && item.linkGForm && item.linkGForm !== '#' ? (
+                        <a
+                          href={item.linkGForm}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2.5 px-4 bg-gradient-to-r from-brand-red to-brand-darkred text-white text-xs font-bold rounded-xl shadow-red-glow hover:opacity-95 transition text-center block"
+                        >
+                          Daftar Sekarang &rarr;
+                        </a>
+                      ) : (
+                        <Link
+                          href="/pendaftaran"
+                          className="w-full py-2.5 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition text-center block"
+                        >
+                          Lihat Detail Agenda
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ===== 5. KABAR & BERITA TERKINI ===== */}
       {latestNews.length > 0 && (
-        <section className="py-16 bg-red-50/10 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
+        <section className="py-16 sm:py-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
               <div>
                 <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
                   Informasi Terbaru
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-bold text-brand-dark dark:text-white mt-3">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
                   Kabar & Berita Terkini
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
@@ -172,6 +423,60 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* ===== 6. PETA SEBARAN 12 PIMPINAN DAERAH (PD) ===== */}
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-red-50/40 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 border-b border-gray-100 dark:border-gray-800 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
+              Jaringan Wilayah
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
+              Sebaran Pimpinan Daerah se-Jawa Barat
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
+              Membina dan menggerakkan potensi pelajar Persis di berbagai kota dan kabupaten se-Jawa Barat.
+            </p>
+          </div>
+
+          {/* Badges Grid Daerah */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-10">
+            {(daerahList.length > 0
+              ? daerahList.map((d) => d.nama)
+              : DEFAULT_DAERAH_LIST
+            ).map((namaDaerah, idx) => (
+              <div
+                key={idx}
+                className="bg-white dark:bg-gray-800 p-3.5 rounded-2xl border border-gray-200/80 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-brand-red/50 dark:hover:border-brand-red/50 transition-all text-center flex flex-col items-center justify-center gap-1 group"
+              >
+                <span className="w-2 h-2 rounded-full bg-brand-red group-hover:scale-125 transition-transform" />
+                <span className="text-xs font-bold text-brand-dark dark:text-white group-hover:text-brand-red transition-colors line-clamp-1">
+                  {namaDaerah}
+                </span>
+                <span className="text-[10px] text-gray-400 dark:text-gray-500">Jawa Barat</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Banner Call-to-Action Direktori PD */}
+          <div className="bg-gradient-to-r from-brand-dark via-gray-900 to-brand-dark text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="text-center sm:text-left">
+              <h3 className="text-lg sm:text-xl font-bold mb-1">
+                Ingin Terhubung dengan Pimpinan Daerah Terdekat?
+              </h3>
+              <p className="text-gray-400 text-xs sm:text-sm">
+                Lihat daftar pengurus, informasi kontak WhatsApp, dan akun Instagram resmi tiap daerah.
+              </p>
+            </div>
+            <Link
+              href="/daerah"
+              className="px-6 py-3 bg-gradient-to-r from-brand-red to-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-red-glow hover:opacity-95 transition transform hover:-translate-y-0.5 flex-shrink-0 text-center"
+            >
+              Buka Direktori Pimpinan Daerah &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
