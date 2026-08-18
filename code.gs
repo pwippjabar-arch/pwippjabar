@@ -503,6 +503,19 @@ function saveAspirasi(data) {
   }
 }
 
+// Fungsi pengujian untuk memicu pop-up otorisasi izin MailApp di Apps Script
+function testSaveAspirasi() {
+  var testData = {
+    nama: 'Penguji Sistem',
+    asal: 'PW IPP Jawa Barat',
+    kategori: 'Usulan Kegiatan & Pelatihan',
+    pesan: 'Ini adalah pesan pengujian integrasi otomatis Kotak Saran Anonim ke Spreadsheet dan Email.'
+  };
+  var res = saveAspirasi(testData);
+  Logger.log(res);
+}
+
+
 
 
 
