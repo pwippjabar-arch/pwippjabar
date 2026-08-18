@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import StatCounter from '@/components/StatCounter';
 import BeritaCard from '@/components/BeritaCard';
-import PetaJabarInteraktif from '@/components/PetaJabarInteraktif';
-import { getBeritaData, getPendaftaranData, getDaerahData, BeritaItem, PendaftaranItem, DaerahItem } from '@/lib/api';
+import FaqSection from '@/components/FaqSection';
+import { getBeritaData, getPendaftaranData, getPengumumanData, BeritaItem, PendaftaranItem, PengumumanItem } from '@/lib/api';
 import { pageSeoMap, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
 import type { Metadata } from 'next';
 
@@ -22,82 +22,10 @@ export const metadata: Metadata = {
   },
 };
 
-const PILAR_BIDANG = [
-  {
-    nama: 'Pendidikan & Dakwah',
-    deskripsi: 'Memperkokoh pemahaman tsaqafah Islamiyah, aqidah, dan dakwah di kalangan pelajar.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-      </svg>
-    ),
-  },
-  {
-    nama: 'Organisasi & Kelembagaan',
-    deskripsi: 'Menguatkan tata kelola keorganisasian, administrasi, dan soliditas struktur pimpinan.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-      </svg>
-    ),
-  },
-  {
-    nama: 'Kaderisasi',
-    deskripsi: 'Menyelenggarakan jenjang pembinaan militan berkarakter Ar-Rasikhuna Fil-Ilmi.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-  },
-  {
-    nama: 'Pengembangan SDM (PSDM)',
-    deskripsi: 'Mengembangkan bakat, potensi kepemimpinan, riset, dan kecakapan hidup kader.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-  },
-  {
-    nama: 'Komunikasi & Informasi',
-    deskripsi: 'Pusat publikasi, literasi digital, syiar media sosial, dan dokumentasi pergerakan.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-      </svg>
-    ),
-  },
-  {
-    nama: 'Ekonomi & Kewirausahaan',
-    deskripsi: 'Menumbuhkan kemandirian finansial kader melalui inkubasi bisnis dan wirausaha muda.',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-];
-
-const DEFAULT_DAERAH_LIST = [
-  'Kota Bandung',
-  'Kab. Bandung',
-  'Kab. Bandung Barat',
-  'Kota Cimahi',
-  'Kab. Garut',
-  'Kab. Tasikmalaya',
-  'Kota Tasikmalaya',
-  'Kab. Ciamis',
-  'Kab. Sumedang',
-  'Kab. Majalengka',
-  'Kab. Cirebon',
-  'Kab. Bogor',
-];
-
 export default async function HomePage() {
   let latestNews: BeritaItem[] = [];
   let openAgendas: PendaftaranItem[] = [];
-  let daerahList: DaerahItem[] = [];
+  let pengumumanList: PengumumanItem[] = [];
 
   try {
     const allNews = await getBeritaData();
@@ -117,9 +45,9 @@ export default async function HomePage() {
   }
 
   try {
-    daerahList = await getDaerahData();
+    pengumumanList = await getPengumumanData();
   } catch (err) {
-    console.error('Gagal memuat daerah di beranda:', err);
+    console.error('Gagal memuat pengumuman di beranda:', err);
   }
 
   return (
@@ -226,50 +154,95 @@ export default async function HomePage() {
       {/* ===== 2. STATISTIK ORGANISASI ===== */}
       <StatCounter />
 
-      {/* ===== 3. SECTION 6 PILAR BIDANG PERGERAKAN ===== */}
-      <section className="py-16 sm:py-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+      {/* ===== 3. KILAS SIARAN PERS & MAKLUMAT RESMI ===== */}
+      <section className="py-14 sm:py-18 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
-              Pilar Gerak Organisasi
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
-              6 Bidang Pergerakan PW IPP Jawa Barat
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
-              Fokus pembinaan dan aktualisasi potensi pelajar dalam berbagai ranah keilmuan, kepemimpinan, dan kemandirian.
-            </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
+            <div>
+              <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit">
+                <span className="w-2 h-2 rounded-full bg-brand-red animate-ping inline-block" />
+                Maklumat & Siaran Pers
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
+                Kilas Maklumat Resmi PW IPP Jawa Barat
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                Informasi resmi, maklumat pimpinan, dan siaran pers terverifikasi dari Pimpinan Wilayah.
+              </p>
+            </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PILAR_BIDANG.map((bidang, idx) => (
-              <div
-                key={idx}
-                className="group p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/80 border border-gray-100 dark:border-gray-700/80 shadow-sm hover:shadow-md hover:border-brand-red/40 dark:hover:border-brand-red/40 transition-all duration-300 flex flex-col justify-between"
-              >
+          {pengumumanList.length === 0 ? (
+            <div className="bg-gradient-to-r from-red-50/70 via-gray-50 to-red-50/40 dark:from-gray-800/80 dark:via-gray-800 dark:to-gray-850 rounded-3xl p-6 sm:p-8 border border-red-100 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-brand-red text-white flex items-center justify-center flex-shrink-0 shadow-red-glow">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                  </svg>
+                </div>
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-red-100/70 dark:bg-red-900/40 text-brand-red flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brand-red group-hover:text-white transition-all duration-300">
-                    {bidang.icon}
-                  </div>
-                  <h3 className="font-bold text-lg text-brand-dark dark:text-white mb-2 group-hover:text-brand-red transition-colors">
-                    {bidang.nama}
+                  <h3 className="font-bold text-base sm:text-lg text-brand-dark dark:text-white">
+                    Papan Maklumat & Siaran Pers Terpusat
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
-                    {bidang.deskripsi}
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">
+                    Seluruh maklumat penting dan rilis sikap resmi pimpinan wilayah akan disiarkan secara berkala di sini.
                   </p>
                 </div>
-                <div className="mt-5 pt-3 border-t border-gray-200/60 dark:border-gray-700/60">
-                  <Link
-                    href="/bidang"
-                    className="text-xs font-bold text-brand-red hover:underline inline-flex items-center gap-1 group-hover:gap-2 transition-all"
-                  >
-                    <span>Pelajari Program & Kebijakan</span>
-                    <span>&rarr;</span>
-                  </Link>
-                </div>
               </div>
-            ))}
-          </div>
+              <Link
+                href="/berita"
+                className="px-6 py-3 bg-brand-red hover:bg-brand-darkred text-white text-xs sm:text-sm font-bold rounded-xl shadow-red-glow transition flex-shrink-0 text-center"
+              >
+                Baca Kabar & Rilis Lengkap &rarr;
+              </Link>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pengumumanList.slice(0, 3).map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200/80 dark:border-gray-700 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-red-50 text-brand-red dark:bg-red-900/30">
+                        {item.kategori || 'Maklumat'}
+                      </span>
+                      <span className="text-xs text-gray-400 dark:text-gray-500">{item.tanggal}</span>
+                    </div>
+                    <h3 className="font-bold text-base text-brand-dark dark:text-white mb-2 line-clamp-2">
+                      {item.judul}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-xs line-clamp-3 leading-relaxed mb-4">
+                      {item.isi}
+                    </p>
+                  </div>
+
+                  <div className="pt-3 border-t border-gray-100 dark:border-gray-700/80">
+                    {item.linkDokumen && item.linkDokumen !== '#' ? (
+                      <a
+                        href={item.linkDokumen}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-bold text-brand-red hover:underline flex items-center gap-1"
+                      >
+                        <span>Unduh / Baca Dokumen Resmi</span>
+                        <span>&rarr;</span>
+                      </a>
+                    ) : (
+                      <Link
+                        href="/berita"
+                        className="text-xs font-bold text-brand-red hover:underline flex items-center gap-1"
+                      >
+                        <span>Lihat Selengkapnya</span>
+                        <span>&rarr;</span>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -425,25 +398,8 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ===== 6. PETA SEBARAN 12 PIMPINAN DAERAH (PD) ===== */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-red-50/40 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 border-b border-gray-100 dark:border-gray-800 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-xs font-semibold text-brand-red uppercase tracking-wider bg-red-50 dark:bg-red-900/30 px-3 py-1 rounded-full">
-              Jaringan Wilayah
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
-              Peta Sebaran Pimpinan Daerah se-Jawa Barat
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
-              Jelajahi jaringan kepengurusan 12 Pimpinan Daerah Ikatan Pelajar Persis yang aktif membina kader di Jawa Barat.
-            </p>
-          </div>
-
-          {/* Komponen Peta Interaktif Jawa Barat + Panel Info */}
-          <PetaJabarInteraktif serverDaerahList={daerahList} />
-        </div>
-      </section>
+      {/* ===== 6. TANYA JAWAB (FAQ) INTERAKTIF ===== */}
+      <FaqSection />
     </>
   );
 }
