@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbz7PZsgfchwrCfmw-sIpbEtl7RM5QhVfXjp9ocFr7sI8MaTls_QfHNCqkK6dliCTaOA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyb5qKwBSHZC2SID44UfN7UWs-FjKDRvdl_uPTlTr4MCg12JZIz9kUlKodhDlQKo0Z7/exec";
 
 export interface BeritaItem {
   id: number | string;
@@ -53,6 +53,16 @@ export interface PengumumanItem {
   linkDokumen: string;
 }
 
+export interface OpiniItem {
+  id: number | string;
+  judul: string;
+  penulis: string;
+  asalDaerah: string;
+  tanggal: string;
+  ringkasan: string;
+  linkTulisan: string;
+}
+
 async function fetchFromApi<T>(action: string): Promise<T[]> {
   const res = await fetch(`${API_URL}?action=${action}`, { next: { revalidate: 60 } });
   if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
@@ -80,7 +90,11 @@ export async function getTasykilData(): Promise<TasykilItem[]> {
 }
 
 export async function getGaleriData(): Promise<GaleriItem[]> {
-  return fetchFromApi<GaleriItem>('getGaleriData');
+  const list = await fetchFromApi<GaleriItem>('getGaleriData');
+  if (list.length > 0 && list[0].id !== undefined) {
+    return [...list].sort((a, b) => Number(b.id) - Number(a.id));
+  }
+  return list;
 }
 
 export async function getPendaftaranData(): Promise<PendaftaranItem[]> {
@@ -99,4 +113,14 @@ export async function getPengumumanData(): Promise<PengumumanItem[]> {
     return [];
   }
 }
+
+export async function getOpiniData(): Promise<OpiniItem[]> {
+  try {
+    return await fetchFromApi<OpiniItem>('getOpiniData');
+  } catch (err) {
+    console.error('Gagal mengambil opini:', err);
+    return [];
+  }
+}
+
 
