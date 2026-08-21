@@ -397,7 +397,7 @@ export default async function HomePage() {
                   Dokumentasi & Aksi
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark dark:text-white mt-3">
-                  Galeri Kegiatan Pelajar
+                  Galeri Kegiatan
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
                   Rekam jejak aktivitas, kaderisasi, dan aksi nyata pelajar Persis di Jawa Barat.
