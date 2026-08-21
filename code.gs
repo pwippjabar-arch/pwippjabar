@@ -248,7 +248,8 @@ function getGaleriData() {
     if (data.length <= 1) return [];
     
     var result = [];
-    for (var i = 1; i < data.length; i++) {
+    // Baca dari baris paling bawah (foto yang baru diupload) ke atas
+    for (var i = data.length - 1; i >= 1; i--) {
       var judul = data[i][0] ? data[i][0].toString().trim() : 'Kegiatan PW IPP';
       var rawFotoUrl = data[i][1] ? data[i][1].toString().trim() : '';
 
