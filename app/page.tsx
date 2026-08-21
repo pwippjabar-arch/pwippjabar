@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import StatCounter from '@/components/StatCounter';
 import BeritaCard from '@/components/BeritaCard';
-import KotakAspirasi from '@/components/KotakAspirasi';
 import {
   getBeritaData,
   getPendaftaranData,
@@ -441,9 +440,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* ===== 7. KOTAK SARAN & ASPIRASI PELAJAR SE-JAWA BARAT ===== */}
-      <KotakAspirasi />
     </>
   );
 }
