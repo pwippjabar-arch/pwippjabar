@@ -257,6 +257,7 @@ function getGaleriData() {
       var fotoDirectUrl = convertGDriveUrl(rawFotoUrl);
 
       result.push({
+        id: i,
         judul: judul,
         foto: fotoDirectUrl
       });
